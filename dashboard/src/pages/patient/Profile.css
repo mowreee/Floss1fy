@@ -1,0 +1,10 @@
+/* src/pages/patient/Profile.css */
+.patient-profile {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+}

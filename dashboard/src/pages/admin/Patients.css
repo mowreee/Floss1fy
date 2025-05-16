@@ -1,0 +1,8 @@
+/* src/pages/admin/Patients.css */
+.admin-patients {
+    overflow-x: auto;
+}
+
+.admin-patients h1 {
+    margin-bottom: 20px;
+}

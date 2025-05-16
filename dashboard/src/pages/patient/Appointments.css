@@ -1,0 +1,8 @@
+/* src/pages/patient/Appointments.css */
+.patient-appointments {
+    overflow-x: auto;
+}
+
+.patient-appointments h1 {
+    margin-bottom: 20px;
+}

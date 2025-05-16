@@ -1,0 +1,56 @@
+/* src/styles/adminstyles/theme.css */
+
+/* Admin primary color palette */
+:root {
+    --primary-color: #1976d2;
+    /* MUI Blue */
+    --primary-light: #63a4ff;
+    --primary-dark: #004ba0;
+    --secondary-color: #9c27b0;
+    /* Purple */
+    --background-color: #f5f7fa;
+    --text-color: #212121;
+    --sidebar-bg: #1565c0;
+    --sidebar-text: #ffffff;
+    --card-bg: #ffffff;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --button-bg: var(--primary-color);
+    --button-text: #fff;
+}
+
+/* Global admin font and background */
+body.admin {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar styles */
+.admin-sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+}
+
+/* Card styles */
+.admin-card {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 8px var(--card-shadow);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+/* Button */
+.admin-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-button:hover {
+    background-color: var(--primary-dark);
+}

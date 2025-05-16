@@ -1,0 +1,8 @@
+/* src/pages/admin/Transactions.css */
+.admin-transactions {
+    overflow-x: auto;
+}
+
+.admin-transactions h1 {
+    margin-bottom: 20px;
+}

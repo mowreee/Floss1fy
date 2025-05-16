@@ -1,0 +1,95 @@
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: 100vh;
+    /* full viewport height */
+    box-sizing: border-box;
+    overflow: hidden;
+    /* no scroll anywhere */
+}
+
+.cards-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    /* wrap cards if needed */
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-bottom {
+    display: flex;
+    gap: 30px;
+    flex-wrap: nowrap;
+    /* keep pie and recent side by side */
+    justify-content: center;
+    flex-grow: 1;
+    /* take remaining space */
+    overflow: hidden;
+    /* prevent scroll */
+}
+
+.pie-chart-container {
+    flex: 1 1 300px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* vertical center */
+    margin: 0 auto;
+    /* horizontal center */
+}
+
+.pie-chart-container h2 {
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+}
+
+.recent-container {
+    flex: 2 1 600px;
+    max-width: 700px;
+    display: flex;
+    flex-direction: row;
+    /* side by side */
+    gap: 15px;
+}
+
+.recent-transactions,
+.recent-patients {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    height: 40vh;
+    /* fixed height */
+    overflow: hidden;
+    flex: 1;
+    /* share width equally */
+    min-width: 300px;
+    /* minimum width */
+}
+
+.recent-transactions ul,
+.recent-patients ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+}
+
+.recent-transactions li,
+.recent-patients li {
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.recent-transactions li:last-child,
+.recent-patients li:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,8 @@
+/* src/pages/patient/MedicalHistory.css */
+.patient-medical-history {
+    overflow-x: auto;
+}
+
+.patient-medical-history h1 {
+    margin-bottom: 20px;
+}

@@ -1,0 +1,8 @@
+/* src/pages/admin/Records.css */
+.admin-records {
+    overflow-x: auto;
+}
+
+.admin-records h1 {
+    margin-bottom: 20px;
+}

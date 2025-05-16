@@ -1,0 +1,99 @@
+/* Dashboard.css */
+
+.patient-dashboard {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 0.2s;
+}
+
+.cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.patient-dashboard-lists {
+    display: flex;
+    gap: 30px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.recent-appointments,
+.recent-medical-records,
+.recent-transactions {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px;
+    max-width: 400px;
+    height: 40vh;
+    overflow-y: auto;
+}
+
+.recent-appointments ul,
+.recent-medical-records ul,
+.recent-transactions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.recent-appointments li,
+.recent-medical-records li,
+.recent-transactions li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.recent-appointments li:last-child,
+.recent-medical-records li:last-child,
+.recent-transactions li:last-child {
+    border-bottom: none;
+}
+
+/* Welcome screen styles */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background-color: #f0f4f8;
+    color: #333;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.welcome-screen h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-screen p {
+    max-width: 600px;
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
