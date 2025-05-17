@@ -1,4 +1,3 @@
-// src/components/Sidebar/PatientSidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './PatientSidebar.css';
@@ -7,11 +6,12 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import logo from '../../assets/sidebar-icon.png';
 
 const PatientSidebar = () => {
     return (
         <div className="patient-sidebar">
-            <img src="sidebar-icon.png" alt="Flossify Logo" className="sidebar-logo" />
+            <img src={logo} alt="Flossify Logo" className="sidebar-logo" />
             <h2>Flossify</h2>
             <ul>
                 <li>

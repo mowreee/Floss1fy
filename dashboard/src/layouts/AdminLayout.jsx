@@ -15,7 +15,7 @@ const AdminLayout = ({ children }) => {
         <Box sx={{ display: 'flex', height: '100vh' }}>
             {sidebarOpen && <AdminSidebar />}
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <Navbar onSidebarToggle={handleSidebarToggle} />
+                <Navbar onSidebarToggle={handleSidebarToggle} userType="admin" />
                 <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#f0f2f5', overflowY: 'auto' }}>
                     {children}
                 </Box>

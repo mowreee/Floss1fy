@@ -4,10 +4,11 @@ import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/EventAvailable';
 import PaymentIcon from '@mui/icons-material/Payments';
 import './Dashboard.css';
+import logo from '../../assets/dental.jpg';
 
-import { appointmentsData } from '../patient/Appointments'; // adjust path
-import { medicalRecordsData } from '../patient/MedicalHistory'; // adjust path
-import { transactionsData } from '../patient/Transactions'; // adjust path
+import { appointmentsData } from '../patient/Appointments';
+import { medicalRecordsData } from '../patient/MedicalHistory';
+import { transactionsData } from '../patient/Transactions';
 
 const Dashboard = () => {
     const [showWelcome, setShowWelcome] = useState(true);
@@ -17,27 +18,10 @@ const Dashboard = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    // Calculate upcoming appointments (date >= today)
     const today = new Date().toISOString().split('T')[0];
     const upcomingCount = appointmentsData.filter(app => app.date >= today).length;
-
-    // Count recent medical records
     const medicalRecordsCount = medicalRecordsData.length;
-
-    // Sum transactions amount
     const totalTransactions = transactionsData.reduce((acc, curr) => acc + curr.amount, 0);
-
-    if (showWelcome) {
-        return (
-            <div className="welcome-screen">
-                <h1>Welcome to Flossify</h1>
-                <p>
-                    Your all-in-one dental health management system to schedule appointments,
-                    manage medical records, and keep track of transactions effortlessly.
-                </p>
-            </div>
-        );
-    }
 
     return (
         <div className="patient-dashboard">

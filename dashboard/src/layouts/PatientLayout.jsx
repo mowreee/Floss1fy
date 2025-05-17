@@ -1,3 +1,4 @@
+// src/layouts/PatientLayout.jsx
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import PatientSidebar from '../components/Sidebar/PatientSidebar';
@@ -14,7 +15,7 @@ const PatientLayout = ({ children }) => {
         <Box sx={{ display: 'flex', height: '100vh' }}>
             {sidebarOpen && <PatientSidebar />}
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <Navbar onSidebarToggle={handleSidebarToggle} />
+                <Navbar onSidebarToggle={handleSidebarToggle} userType="patient" />
                 <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#e8f5e9', overflowY: 'auto' }}>
                     {children}
                 </Box>
