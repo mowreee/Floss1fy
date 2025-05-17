@@ -1,10 +1,38 @@
 /* src/pages/patient/Profile.css */
 .patient-profile {
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    padding: 40px 60px;
+    box-sizing: border-box;
 }
 
 .profile-form {
     display: flex;
     flex-direction: column;
+    gap: 24px;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.profile-view {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1.1rem;
+    padding: 30px 0;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+}
+
+.profile-view p {
+    margin: 0;
+    color: #222;
+    line-height: 1.6;
+}
+
+.profile-view strong {
+    color: #1976d2;
+    font-weight: 600;
+    display: inline-block;
+    width: 140px;
 }

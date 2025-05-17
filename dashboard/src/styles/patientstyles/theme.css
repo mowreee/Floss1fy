@@ -1,16 +1,11 @@
-/* src/styles/patientstyles/theme.css */
-
-/* Patient primary color palette */
 :root {
-    --primary-color: #388e3c;
-    /* MUI Green */
-    --primary-light: #6abf69;
-    --primary-dark: #00600f;
-    --secondary-color: #fbc02d;
-    /* Yellow */
-    --background-color: #e8f5e9;
-    --text-color: #1b5e20;
-    --sidebar-bg: #2e7d32;
+    --primary-color: #1976d2;
+    --primary-light: #63a4ff;
+    --primary-dark: #004ba0;
+    --secondary-color: #9c27b0;
+    --background-color: #f5f7fa;
+    --text-color: #212121;
+    --sidebar-bg: #1565c0;
     --sidebar-text: #ffffff;
     --card-bg: #ffffff;
     --card-shadow: rgba(0, 0, 0, 0.1);
@@ -18,7 +13,6 @@
     --button-text: #fff;
 }
 
-/* Global patient font and background */
 body.patient {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-color);
@@ -27,13 +21,11 @@ body.patient {
     padding: 0;
 }
 
-/* Sidebar styles */
 .patient-sidebar {
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
 }
 
-/* Card styles */
 .patient-card {
     background-color: var(--card-bg);
     box-shadow: 0 2px 8px var(--card-shadow);
@@ -41,7 +33,6 @@ body.patient {
     padding: 16px;
 }
 
-/* Button */
 .patient-button {
     background-color: var(--button-bg);
     color: var(--button-text);
