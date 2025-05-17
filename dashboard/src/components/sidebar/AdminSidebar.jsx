@@ -6,10 +6,12 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import logo from '../../assets/sidebar-icon.png';
 
 const AdminSidebar = () => {
     return (
         <div className="admin-sidebar">
+            <img src={logo} alt="Flossify Logo" className="sidebar-logo" />
             <h2>Admin Panel</h2>
             <ul>
                 <li>
