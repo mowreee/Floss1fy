@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import '../../styles/login.css';
 
-
 export default function SignUp({ onSwitchToLogin }) {
     const [form, setForm] = useState({
         username: "",

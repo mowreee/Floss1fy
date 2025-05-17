@@ -5,20 +5,9 @@ import EventIcon from '@mui/icons-material/EventAvailable';
 import PaymentIcon from '@mui/icons-material/Payments';
 import './Dashboard.css';
 
-const recentAppointments = [
-    { id: 1, doctor: 'Dr. Smith', date: '2025-05-20', time: '10:00 AM', status: 'Confirmed' },
-    { id: 2, doctor: 'Dr. Lee', date: '2025-05-25', time: '2:00 PM', status: 'Pending' },
-];
-
-const recentMedicalRecords = [
-    { id: 1, type: 'X-Ray', date: '2025-04-20' },
-    { id: 2, type: 'Blood Test', date: '2025-03-15' },
-];
-
-const recentTransactions = [
-    { id: 1, amount: '₱1,200', date: '2025-05-10' },
-    { id: 2, amount: '₱850', date: '2025-04-25' },
-];
+import { appointmentsData } from '../patient/Appointments'; // adjust path
+import { medicalRecordsData } from '../patient/MedicalHistory'; // adjust path
+import { transactionsData } from '../patient/Transactions'; // adjust path
 
 const Dashboard = () => {
     const [showWelcome, setShowWelcome] = useState(true);
@@ -27,6 +16,16 @@ const Dashboard = () => {
         const timer = setTimeout(() => setShowWelcome(false), 3500);
         return () => clearTimeout(timer);
     }, []);
+
+    // Calculate upcoming appointments (date >= today)
+    const today = new Date().toISOString().split('T')[0];
+    const upcomingCount = appointmentsData.filter(app => app.date >= today).length;
+
+    // Count recent medical records
+    const medicalRecordsCount = medicalRecordsData.length;
+
+    // Sum transactions amount
+    const totalTransactions = transactionsData.reduce((acc, curr) => acc + curr.amount, 0);
 
     if (showWelcome) {
         return (
@@ -44,18 +43,18 @@ const Dashboard = () => {
         <div className="patient-dashboard">
             <h1>Patient Dashboard</h1>
             <div className="cards-container">
-                <DashboardCards title="Upcoming Appointments" value="2" icon={<EventIcon color="primary" />} />
-                <DashboardCards title="Medical Records" value="5" icon={<PeopleIcon color="primary" />} />
-                <DashboardCards title="Transactions" value="₱4,500" icon={<PaymentIcon color="primary" />} />
+                <DashboardCards title="Upcoming Appointments" value={upcomingCount.toString()} icon={<EventIcon color="primary" />} />
+                <DashboardCards title="Medical Records" value={medicalRecordsCount.toString()} icon={<PeopleIcon color="primary" />} />
+                <DashboardCards title="Transactions" value={`₱${totalTransactions.toLocaleString()}`} icon={<PaymentIcon color="primary" />} />
             </div>
 
             <div className="patient-dashboard-lists">
                 <div className="recent-appointments">
                     <h2>Recent Appointments</h2>
                     <ul>
-                        {recentAppointments.map(({ id, doctor, date, time, status }) => (
+                        {appointmentsData.map(({ id, dentist, date, time, status }) => (
                             <li key={id}>
-                                {date} at {time} with {doctor} - <strong>{status}</strong>
+                                {date} at {time} with {dentist} - <strong>{status}</strong>
                             </li>
                         ))}
                     </ul>
@@ -64,7 +63,7 @@ const Dashboard = () => {
                 <div className="recent-medical-records">
                     <h2>Recent Medical Records</h2>
                     <ul>
-                        {recentMedicalRecords.map(({ id, type, date }) => (
+                        {medicalRecordsData.map(({ id, type, date }) => (
                             <li key={id}>
                                 {type} — {date}
                             </li>
@@ -75,9 +74,9 @@ const Dashboard = () => {
                 <div className="recent-transactions">
                     <h2>Recent Transactions</h2>
                     <ul>
-                        {recentTransactions.map(({ id, amount, date }) => (
+                        {transactionsData.map(({ id, amount, date }) => (
                             <li key={id}>
-                                {amount} — {date}
+                                ₱{amount.toLocaleString()} — {date}
                             </li>
                         ))}
                     </ul>

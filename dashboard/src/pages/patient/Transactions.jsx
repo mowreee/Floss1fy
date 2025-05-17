@@ -3,9 +3,9 @@ import React from 'react';
 import './Transactions.css';
 import { Table, TableHead, TableRow, TableCell, TableBody, Chip } from '@mui/material';
 
-const dummyTransactions = [
-    { id: 1, amount: 1200, date: '2025-02-10', status: 'Paid' },
-    { id: 2, amount: 2000, date: '2025-03-15', status: 'Pending' },
+export const transactionsData = [
+    { id: 1, amount: 1200, date: '2025-05-10' },
+    { id: 2, amount: 850, date: '2025-04-25' },
 ];
 
 const Transactions = () => {
@@ -21,7 +21,7 @@ const Transactions = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dummyTransactions.map(({ id, amount, date, status }) => (
+                    {transactionsData.map(({ id, amount, date, status }) => (
                         <TableRow key={id}>
                             <TableCell>{amount}</TableCell>
                             <TableCell>{date}</TableCell>

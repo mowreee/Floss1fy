@@ -9,14 +9,20 @@ import { Box } from '@mui/material';
 
 const Navbar = ({ onSidebarToggle }) => {
     return (
-        <AppBar position="static" color="primary" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar
+            position="static"
+            sx={{
+                backgroundColor: '#456176',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+        >
             <Toolbar>
                 <IconButton
                     edge="start"
                     color="inherit"
                     aria-label="menu"
                     onClick={onSidebarToggle}
-                    sx={{ mr: 2, display: { sm: 'none' } }} // hide on larger screens
+                    sx={{ mr: 2, display: { sm: 'none' } }}
                 >
                     <MenuIcon />
                 </IconButton>

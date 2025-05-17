@@ -16,6 +16,11 @@ const initialAppointments = [
     { id: 1, dentist: 'Dr. Smith', date: '2025-06-01', time: '10:00 AM', status: 'Confirmed', medicalRecord: 'Teeth cleaning' },
     { id: 2, dentist: 'Dr. Lee', date: '2025-06-15', time: '2:00 PM', status: 'Pending', medicalRecord: 'Cavity filling' },
 ];
+export const appointmentsData = [
+    { id: 1, dentist: 'Dr. Smith', date: '2025-06-01', time: '10:00 AM', status: 'Confirmed', medicalRecord: 'Teeth cleaning' },
+    { id: 2, dentist: 'Dr. Lee', date: '2025-06-15', time: '2:00 PM', status: 'Pending', medicalRecord: 'Cavity filling' },
+];
+
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState(initialAppointments);

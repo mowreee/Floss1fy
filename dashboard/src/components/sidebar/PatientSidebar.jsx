@@ -11,7 +11,8 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 const PatientSidebar = () => {
     return (
         <div className="patient-sidebar">
-            <h2>My Account</h2>
+            <img src="sidebar-icon.png" alt="Flossify Logo" className="sidebar-logo" />
+            <h2>Flossify</h2>
             <ul>
                 <li>
                     <NavLink to="/patient/dashboard" className="sidebar-link">
@@ -42,5 +43,6 @@ const PatientSidebar = () => {
         </div>
     );
 };
+
 
 export default PatientSidebar;

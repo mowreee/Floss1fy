@@ -1,13 +1,8 @@
-/* src/styles/adminstyles/theme.css */
-
-/* Admin primary color palette */
 :root {
     --primary-color: #1976d2;
-    /* MUI Blue */
     --primary-light: #63a4ff;
     --primary-dark: #004ba0;
     --secondary-color: #9c27b0;
-    /* Purple */
     --background-color: #f5f7fa;
     --text-color: #212121;
     --sidebar-bg: #1565c0;
@@ -18,7 +13,6 @@
     --button-text: #fff;
 }
 
-/* Global admin font and background */
 body.admin {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-color);

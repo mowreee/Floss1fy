@@ -1,11 +1,10 @@
-// src/pages/patient/MedicalHistory.jsx
 import React from 'react';
 import './MedicalHistory.css';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-const dummyHistory = [
-    { id: 1, treatment: 'Teeth Cleaning', dentist: 'Dr. Smith', date: '2024-12-01' },
-    { id: 2, treatment: 'Filling', dentist: 'Dr. Lee', date: '2025-01-15' },
+export const medicalRecordsData = [
+    { id: 1, treatment: 'X-Ray', dentist: 'Dr. Smith', date: '2025-04-20' },
+    { id: 2, treatment: 'Blood Test', dentist: 'Dr. Lee', date: '2025-03-15' },
 ];
 
 const MedicalHistory = () => {
@@ -21,7 +20,7 @@ const MedicalHistory = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dummyHistory.map(({ id, treatment, dentist, date }) => (
+                    {medicalRecordsData.map(({ id, treatment, dentist, date }) => (
                         <TableRow key={id}>
                             <TableCell>{treatment}</TableCell>
                             <TableCell>{dentist}</TableCell>

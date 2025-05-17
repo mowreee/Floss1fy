@@ -1,7 +1,7 @@
 .admin-sidebar {
     width: 220px;
     height: 100vh;
-    background-color: #0d47a1;
+    background-color: #456176;
     color: white;
     padding: 20px;
     box-sizing: border-box;
@@ -35,7 +35,7 @@
 }
 
 .admin-sidebar a:hover {
-    background-color: #1565c0;
+    background-color: #7ca2c3;
 }
 
 .admin-sidebar a.active {
