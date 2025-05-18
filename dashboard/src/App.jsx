@@ -15,17 +15,17 @@ import Transactions from './pages/admin/Transactions';
 import PatientDashboard from './pages/patient/Dashboard';
 import MedicalHistory from './pages/patient/MedicalHistory';
 import Profile from './pages/patient/Profile';
-import PatientAppointments from './pages/patient/Appointments';
+import PatientAppointments from './pages/patient/PatientAppointments';
 import PatientTransactions from './pages/patient/Transactions';
 
 import Login from './components/auth/Login';
-import Signup from './components/auth/Signup'; // You should have this
+import Signup from './components/auth/Signup';
 
 const App = () => {
   const [userType, setUserType] = useState(null);
 
   const handleLoginSuccess = (role) => {
-    setUserType(role); // role = 'admin' or 'patient'
+    setUserType(role); // 'admin' or 'patient'
   };
 
   if (!userType) {
@@ -33,7 +33,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
@@ -46,7 +46,7 @@ const App = () => {
         <Route path="/admin/patients" element={<Patients />} />
         <Route path="/admin/records" element={<Records />} />
         <Route path="/admin/transactions" element={<Transactions />} />
-        <Route path="*" element={<Navigate to="/admin/dashboard" />} />
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
       </Routes>
     </AdminLayout>
   ) : (
@@ -57,7 +57,7 @@ const App = () => {
         <Route path="/patient/medical-history" element={<MedicalHistory />} />
         <Route path="/patient/profile" element={<Profile />} />
         <Route path="/patient/transactions" element={<PatientTransactions />} />
-        <Route path="*" element={<Navigate to="/patient/dashboard" />} />
+        <Route path="*" element={<Navigate to="/patient/dashboard" replace />} />
       </Routes>
     </PatientLayout>
   );

@@ -1,37 +1,32 @@
 import React, { useState } from "react";
 import '../../styles/login.css';
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+const users = [
+    { username: "admin", password: "admin123", role: "admin" },
+    { username: "patient1", password: "patient123", role: "patient" },
+];
 
 export default function Login({ onLoginSuccess }) {
     const [form, setForm] = useState({ username: "", password: "" });
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = e => {
+        setForm(f => ({ ...f, [e.target.name]: e.target.value }));
         setError("");
     };
 
-    const users = [
-        { username: "admin", password: "admin123", role: "admin" },
-        { username: "patient1", password: "patient123", role: "patient" },
-    ];
-
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
-        const user = users.find(
-            (u) => u.username === form.username && u.password === form.password
-        );
+        const user = users.find(u => u.username === form.username && u.password === form.password);
         if (user) {
             onLoginSuccess(user.role);
             navigate(`/${user.role}/dashboard`);
-        } else {
-            setError("Invalid username or password");
-        }
-    };
-
-    const handleSwitchToSignUp = () => {
-        navigate("/signup");
+        } else setError("Invalid username or password");
     };
 
     return (
@@ -45,23 +40,34 @@ export default function Login({ onLoginSuccess }) {
                     onChange={handleChange}
                     required
                 />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                />
+
+                <div className="password-wrapper">
+                    <input
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                    />
+                    <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        tabIndex={-1}
+                        className="eye-icon"
+                    >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </div>
+
                 <button type="submit">Login</button>
                 {error && <p className="error">{error}</p>}
             </form>
             <p
                 className="link"
-                onClick={handleSwitchToSignUp}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && handleSwitchToSignUp()}
+                onClick={() => navigate("/signup")}
+                onKeyDown={e => e.key === "Enter" && navigate("/signup")}
             >
                 Don't have an account? Sign Up
             </p>

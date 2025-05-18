@@ -21,13 +21,11 @@ body.admin {
     padding: 0;
 }
 
-/* Sidebar styles */
 .admin-sidebar {
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
 }
 
-/* Card styles */
 .admin-card {
     background-color: var(--card-bg);
     box-shadow: 0 2px 8px var(--card-shadow);
@@ -35,7 +33,6 @@ body.admin {
     padding: 16px;
 }
 
-/* Button */
 .admin-button {
     background-color: var(--button-bg);
     color: var(--button-text);

@@ -78,3 +78,21 @@ footer {
     color: #888;
     margin-top: 24px;
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 5px;
+    color: #555;
+}

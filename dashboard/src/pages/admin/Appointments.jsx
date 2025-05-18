@@ -1,12 +1,22 @@
-// src/pages/admin/Appointments.jsx
 import React from 'react';
 import './Appointments.css';
 import { Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material';
+import { appointmentsData } from '../patient/PatientAppointments'; // renamed export
 
 const dummyAppointments = [
     { id: 1, patient: 'John Doe', date: '2025-05-20', time: '10:00 AM', status: 'Confirmed' },
     { id: 2, patient: 'Jane Smith', date: '2025-05-21', time: '1:00 PM', status: 'Pending' },
 ];
+
+const mappedPatientAppointments = appointmentsData.map(({ id, dentist, date, time, status }) => ({
+    id: id + 1000,
+    patient: dentist,
+    date,
+    time,
+    status,
+}));
+
+const allAppointments = [...dummyAppointments, ...mappedPatientAppointments];
 
 const Appointments = () => {
     return (
@@ -15,7 +25,7 @@ const Appointments = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Patient</TableCell>
+                        <TableCell>Patient / Dentist</TableCell>
                         <TableCell>Date</TableCell>
                         <TableCell>Time</TableCell>
                         <TableCell>Status</TableCell>
@@ -23,7 +33,7 @@ const Appointments = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dummyAppointments.map(({ id, patient, date, time, status }) => (
+                    {allAppointments.map(({ id, patient, date, time, status }) => (
                         <TableRow key={id}>
                             <TableCell>{patient}</TableCell>
                             <TableCell>{date}</TableCell>

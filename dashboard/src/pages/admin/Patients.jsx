@@ -3,10 +3,13 @@ import React from 'react';
 import './Patients.css';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-const dummyPatients = [
+export const dummyPatients = [
     { id: 1, name: 'John Doe', age: 30, contact: '09123456789' },
     { id: 2, name: 'Jane Smith', age: 25, contact: '09987654321' },
 ];
+
+// ...rest of your component code unchanged
+
 
 const Patients = () => {
     return (
