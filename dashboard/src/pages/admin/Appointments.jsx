@@ -1,9 +1,9 @@
 import React from 'react';
 import './Appointments.css';
 import { Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material';
-import { appointmentsData } from '../patient/PatientAppointments'; // renamed export
+import { appointmentsData } from '../patient/PatientAppointments';
 
-const dummyAppointments = [
+export const dummyAppointments = [
     { id: 1, patient: 'John Doe', date: '2025-05-20', time: '10:00 AM', status: 'Confirmed' },
     { id: 2, patient: 'Jane Smith', date: '2025-05-21', time: '1:00 PM', status: 'Pending' },
 ];

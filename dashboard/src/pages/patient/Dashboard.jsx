@@ -6,8 +6,6 @@ import PaymentIcon from '@mui/icons-material/Payments';
 import './Dashboard.css';
 import logo from '../../assets/dental.jpg';
 
-import { appointmentsData, medicalRecordsData, transactionsData } from '../../data/mockData';
-
 const Dashboard = () => {
     const [showWelcome, setShowWelcome] = useState(true);
 
