@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Table, TableHead, TableRow, TableCell, TableBody,
-    Button, Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, MenuItem,
-} from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, } from '@mui/material';
 import './Appointments.css';
 
 const dentists = [
@@ -17,8 +13,6 @@ const initialAppointments = [
     { id: 2, dentist: 'Dr. Lee', date: '2025-06-15', time: '14:00', status: 'Pending', medicalRecord: 'Cavity filling' },
 ];
 
-export const appointmentsData = [...initialAppointments];
-
 const PatientAppointments = () => {
     const [appointments, setAppointments] = useState(initialAppointments);
     const [open, setOpen] = useState(false);
@@ -28,27 +22,20 @@ const PatientAppointments = () => {
     const handleClose = () => { setOpen(false); setForm({ dentist: '', date: '', time: '', medicalRecord: '' }); };
     const handleAdd = e => {
         e.preventDefault();
-        setAppointments(a => [
-            ...a,
-            { ...form, id: a.length + 1, status: 'Pending' }
-        ]);
+        setAppointments(a => [...a, { ...form, id: a.length + 1, status: 'Pending' }]);
         handleClose();
     };
 
     return (
         <div className="patient-appointments">
             <h1>My Appointments</h1>
-            <Button variant="contained" onClick={() => setOpen(true)} sx={{ mb: 2 }}>
-                Add Appointment
-            </Button>
+            <Button variant="contained" onClick={() => setOpen(true)} sx={{ mb: 2 }}>Add Appointment</Button>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Dentist</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Time</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Purpose</TableCell>
+                        {['Dentist', 'Date', 'Time', 'Status', 'Purpose'].map(h => (
+                            <TableCell key={h}>{h}</TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -95,9 +82,7 @@ const PatientAppointments = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" form="add-appointment-form" variant="contained">
-                        Add
-                    </Button>
+                    <Button type="submit" form="add-appointment-form" variant="contained">Add</Button>
                 </DialogActions>
             </Dialog>
         </div>
