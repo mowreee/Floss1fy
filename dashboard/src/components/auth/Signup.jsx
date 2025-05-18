@@ -5,54 +5,65 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function SignUp({ onSwitchToLogin }) {
     const [form, setForm] = useState({
-        username: "", lastName: "", firstName: "", middleName: "", email: "", password: "", confirmPassword: ""
+        username: "", lastName: "", firstName: "", middleName: "",
+        email: "", password: "", confirmPassword: ""
     });
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [msg, setMsg] = useState({ error: "", success: "" });
+    const [show, setShow] = useState({ pass: false, confirm: false });
 
-    const handleChange = (e) => {
+    const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        setError(""); setSuccess("");
+        setMsg({ error: "", success: "" });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match");
-            return;
+        if (form.password !== form.confirmPassword)
+            return setMsg({ error: "Passwords do not match", success: "" });
+
+        try {
+            const res = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form)
+            });
+            const data = await res.json();
+            res.ok
+                ? setMsg({ success: "Account created! Please log in.", error: "" })
+                : setMsg({ error: data.message || "Signup failed", success: "" });
+            if (res.ok) setForm({ ...form, password: "", confirmPassword: "" });
+        } catch {
+            setMsg({ error: "Server error", success: "" });
         }
-        setSuccess("Account created successfully! Please log in.");
-        setForm({ username: "", lastName: "", firstName: "", middleName: "", email: "", password: "", confirmPassword: "" });
     };
 
     return (
         <div className="container">
             <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
-                <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-                <input name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
-                <input name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} required />
-                <input name="middleName" placeholder="Middle Name" value={form.middleName} onChange={handleChange} />
-                <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-                <div className="password-wrapper">
-                    <input name="password" type={showPassword ? "text" : "password"} placeholder="Password" value={form.password} onChange={handleChange} required />
-                    <IconButton onClick={() => setShowPassword(p => !p)} tabIndex={-1} className="eye-icon">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                </div>
-                <div className="password-wrapper">
-                    <input name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
-                    <IconButton onClick={() => setShowConfirm(p => !p)} tabIndex={-1} className="eye-icon">
-                        {showConfirm ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                </div>
+                {["username", "lastName", "firstName", "middleName", "email"].map(name => (
+                    <input key={name} name={name} placeholder={name.replace(/([A-Z])/g, " $1")} value={form[name]} onChange={handleChange} required={name !== "middleName"} />
+                ))}
+                {["password", "confirmPassword"].map((name, i) => (
+                    <div key={name} className="password-wrapper">
+                        <input
+                            name={name}
+                            type={show[i ? "confirm" : "pass"] ? "text" : "password"}
+                            placeholder={name.replace(/([A-Z])/g, " $1")}
+                            value={form[name]}
+                            onChange={handleChange}
+                            required
+                        />
+                        <IconButton onClick={() => setShow(s => ({ ...s, [i ? "confirm" : "pass"]: !s[i ? "confirm" : "pass"] }))} tabIndex={-1}>
+                            {show[i ? "confirm" : "pass"] ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                    </div>
+                ))}
                 <button type="submit">Sign Up</button>
-                {error && <p className="error">{error}</p>}
-                {success && <p style={{ color: "green", textAlign: "center" }}>{success}</p>}
+                {msg.error && <p className="error">{msg.error}</p>}
+                {msg.success && <p style={{ color: "green", textAlign: "center" }}>{msg.success}</p>}
             </form>
-            <p className="link" onClick={onSwitchToLogin} role="button" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onSwitchToLogin()}>
+            <p className="link" role="button" tabIndex={0} onClick={onSwitchToLogin} onKeyDown={e => e.key === "Enter" && onSwitchToLogin()}>
                 Already have an account? Login
             </p>
         </div>

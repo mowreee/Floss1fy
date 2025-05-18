@@ -4,71 +4,46 @@ import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const users = [
-    { username: "admin", password: "admin123", role: "admin" },
-    { username: "patient1", password: "patient123", role: "patient" },
-];
-
 export default function Login({ onLoginSuccess }) {
-    const [form, setForm] = useState({ username: "", password: "" });
+    const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const handleChange = e => {
-        setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-        setError("");
-    };
+    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        const user = users.find(u => u.username === form.username && u.password === form.password);
-        if (user) {
-            onLoginSuccess(user.role);
-            navigate(`/${user.role}/dashboard`);
-        } else setError("Invalid username or password");
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form)
+        });
+        const data = await res.json();
+        if (res.ok) {
+            onLoginSuccess?.(data.role);
+            navigate(`/${data.role}/dashboard`);
+        } else {
+            setError(data.message || "Invalid credentials");
+        }
     };
 
     return (
         <div className="container">
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <input
-                    name="username"
-                    placeholder="Username"
-                    value={form.username}
-                    onChange={handleChange}
-                    required
-                />
-
+                <input name="email" placeholder="Email" onChange={handleChange} required />
                 <div className="password-wrapper">
-                    <input
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        value={form.password}
-                        onChange={handleChange}
-                        required
-                    />
-                    <IconButton
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        tabIndex={-1}
-                        className="eye-icon"
-                    >
+                    <input name="password" type={showPassword ? "text" : "password"} placeholder="Password" onChange={handleChange} required />
+                    <IconButton onClick={() => setShowPassword(!showPassword)} tabIndex={-1} className="eye-icon">
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                 </div>
-
                 <button type="submit">Login</button>
                 {error && <p className="error">{error}</p>}
             </form>
-            <p
-                className="link"
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate("/signup")}
-                onKeyDown={e => e.key === "Enter" && navigate("/signup")}
-            >
+            <p className="link" role="button" tabIndex={0} onClick={() => navigate("/signup")} onKeyDown={e => e.key === "Enter" && navigate("/signup")}>
                 Don't have an account? Sign Up
             </p>
         </div>
