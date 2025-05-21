@@ -8,8 +8,6 @@ const userSchema = new mongoose.Schema({
    email: { type: String, required: true, unique: true },
    password: { type: String, required: true },
    role: { type: String, enum: ['admin', 'patient'], default: 'patient' },
-   age: { type: Number }, // Optional
-   contact: { type: String } // Optional
 });
 
 export default mongoose.model('User', userSchema);
