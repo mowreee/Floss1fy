@@ -8,12 +8,12 @@ import userRoutes from './routes/userRoutes.js';
 dotenv.config();
 connectDB();
 
-app.use('/api/users', userRoutes);
+const app = express(); // <-- Move this line up
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/users', userRoutes); // <-- Now it's after app is defined
 app.use('/api/dashboard', dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
