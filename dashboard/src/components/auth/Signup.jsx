@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../../styles/login.css";
 import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 
 export default function Signup() {
     const [form, setForm] = useState({
@@ -14,6 +16,8 @@ export default function Signup() {
         role: "patient",
     });
     const [msg, setMsg] = useState({ error: "", success: "" });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -21,10 +25,26 @@ export default function Signup() {
         setMsg({ error: "", success: "" });
     };
 
+    const isValidPassword = (password) => {
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        return hasUpper && hasNumber && hasSpecial;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (form.password !== form.confirmPassword)
+
+        if (!isValidPassword(form.password)) {
+            return setMsg({
+                error: "Password must contain at least 1 uppercase letter, 1 number, and 1 special character.",
+                success: "",
+            });
+        }
+
+        if (form.password !== form.confirmPassword) {
             return setMsg({ error: "Passwords do not match", success: "" });
+        }
 
         try {
             const res = await fetch("/api/auth/signup", {
@@ -53,16 +73,65 @@ export default function Signup() {
                 <input name="firstname" placeholder="First Name" value={form.firstname} onChange={handleChange} required />
                 <input name="middlename" placeholder="Middle Name" value={form.middlename} onChange={handleChange} />
                 <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-                <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-                <input name="confirmPassword" type="password" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
-                <select name="role" value={form.role} onChange={handleChange}>
+
+                <div style={{ position: "relative" }}>
+                    <input
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                        style={{ paddingRight: "40px" }}
+                    />
+                    <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: "absolute",
+                            right: 5,
+                            top: "50%",
+                            transform: "translateY(-50%)"
+                        }}
+                        tabIndex={-1}
+                    >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </div>
+
+                <div style={{ position: "relative" }}>
+                    <input
+                        name="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={form.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        style={{ paddingRight: "40px" }}
+                    />
+                    <IconButton
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        style={{
+                            position: "absolute",
+                            right: 5,
+                            top: "50%",
+                            transform: "translateY(-50%)"
+                        }}
+                        tabIndex={-1}
+                    >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </div>
+
+                <select name="role" value={form.role} onChange={handleChange} required>
                     <option value="patient">Patient</option>
                     <option value="doctor">Doctor</option>
                 </select>
+
                 <button type="submit">Sign Up</button>
                 {msg.error && <div className="error">{msg.error}</div>}
                 {msg.success && <div className="success">{msg.success}</div>}
             </form>
+
             <p className="link" role="button" tabIndex={0} onClick={() => navigate("/login")}>
                 Already have an account? Login
             </p>
