@@ -4,7 +4,6 @@ import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/EventAvailable';
 import PaymentIcon from '@mui/icons-material/Payments';
 import './Dashboard.css';
-import logo from '../../assets/dental.jpg';
 
 const Dashboard = () => {
     const [showWelcome, setShowWelcome] = useState(true);

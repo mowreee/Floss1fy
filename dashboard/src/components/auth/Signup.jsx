@@ -16,27 +16,6 @@ export default function SignUp({ onSwitchToLogin }) {
         setMsg({ error: "", success: "" });
     };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        if (form.password !== form.confirmPassword)
-            return setMsg({ error: "Passwords do not match", success: "" });
-
-        try {
-            const res = await fetch("/api/auth/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form)
-            });
-            const data = await res.json();
-            res.ok
-                ? setMsg({ success: "Account created! Please log in.", error: "" })
-                : setMsg({ error: data.message || "Signup failed", success: "" });
-            if (res.ok) setForm({ ...form, password: "", confirmPassword: "" });
-        } catch {
-            setMsg({ error: "Server error", success: "" });
-        }
-    };
-
     return (
         <div className="container">
             <h2>Sign Up</h2>
