@@ -16,5 +16,9 @@
    },
    "devDependencies": {
       "nodemon": "^3.0.0"
-   }
+   },
+   "description": "1. **Create a New Directory for the Backend:**    Open your terminal and navigate to the directory where you want to create your backend project. Then create a new directory:",
+   "keywords": [],
+   "author": "",
+   "license": "ISC"
 }
