@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Appointment from './src/models/appointment.js';
+import Transaction from './src/models/transaction.js';
 
 dotenv.config();
 
@@ -9,12 +9,12 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/flossi
 async function addPurpose() {
     await mongoose.connect(MONGODB_URI);
 
-    const result = await Appointment.updateMany(
+    const result = await Transaction.updateMany(
         { purpose: { $exists: false } },
         { $set: { purpose: 'Consultation' } } // You can change the default value
     );
 
-    console.log(`Updated ${result.modifiedCount} appointments.`);
+    console.log(`Updated ${result.modifiedCount} transactions.`);
     await mongoose.disconnect();
 }
 

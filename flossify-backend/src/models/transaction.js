@@ -1,10 +1,9 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 const transactionSchema = new mongoose.Schema({
-    patient: String, // Patient name or ID
+    patient: String,
+    purpose: String,
     amount: Number,
-    date: String, // ISO date string
-    status: { type: String, default: 'Pending' } // Paid/Pending
+    date: String,
+    status: String,
 });
-
-export default mongoose.model('Transaction', transactionSchema);
+export default mongoose.model("Transaction", transactionSchema);

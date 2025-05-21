@@ -1,6 +1,7 @@
 /* src/pages/admin/Transactions.css */
 .admin-transactions {
     overflow-x: auto;
+    padding: 24px;
 }
 
 .admin-transactions h1 {

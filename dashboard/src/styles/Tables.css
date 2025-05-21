@@ -1,13 +1,4 @@
-.admin-patients {
-    overflow-x: auto;
-    padding: 24px;
-}
-
-.admin-patients h1 {
-    margin-bottom: 20px;
-}
-
-.admin-patients table {
+.styled-table {
     width: 100%;
     border-collapse: collapse;
     background: #fff;
@@ -16,19 +7,19 @@
     overflow: hidden;
 }
 
-.admin-patients th,
-.admin-patients td {
+.styled-table th,
+.styled-table td {
     padding: 12px 16px;
     border-bottom: 1px solid #e0e0e0;
     text-align: left;
 }
 
-.admin-patients th {
+.styled-table th {
     background: #f5f7fa;
     color: #1976d2;
     font-weight: 600;
 }
 
-.admin-patients tr:last-child td {
+.styled-table tr:last-child td {
     border-bottom: none;
 }

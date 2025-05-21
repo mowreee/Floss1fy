@@ -1,46 +1,46 @@
 import React, { useState } from "react";
 import "../../styles/login.css";
-import { IconButton, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
-export default function SignUp({ onSwitchToLogin }) {
+export default function Signup() {
     const [form, setForm] = useState({
-        username: "", lastName: "", firstName: "", middleName: "",
-        email: "", password: "", confirmPassword: "", role: "patient"
+        username: "",
+        lastname: "",
+        firstname: "",
+        middlename: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        role: "patient",
     });
     const [msg, setMsg] = useState({ error: "", success: "" });
-    const [show, setShow] = useState({ pass: false, confirm: false });
+    const navigate = useNavigate();
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
         setMsg({ error: "", success: "" });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (form.password !== form.confirmPassword) {
-            setMsg({ error: "Passwords do not match", success: "" });
-            return;
-        }
+        if (form.password !== form.confirmPassword)
+            return setMsg({ error: "Passwords do not match", success: "" });
+
         try {
-            const res = await fetch("http://localhost:5000/api/users/register", {
+            const res = await fetch("/api/auth/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username: form.username,
-                    lastname: form.lastName,
-                    firstname: form.firstName,
-                    middlename: form.middleName,
-                    email: form.email,
-                    password: form.password,
-                    role: form.role
-                })
+                body: JSON.stringify(form),
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || "Registration failed");
-            setMsg({ error: "", success: "Registration successful! You can now login." });
-        } catch (err) {
-            setMsg({ error: err.message, success: "" });
+            if (res.ok) {
+                setMsg({ success: "Account created! Redirecting to login...", error: "" });
+                setTimeout(() => navigate("/login"), 1500);
+            } else {
+                setMsg({ error: data.message || "Signup failed", success: "" });
+            }
+        } catch {
+            setMsg({ error: "Server error", success: "" });
         }
     };
 
@@ -48,43 +48,22 @@ export default function SignUp({ onSwitchToLogin }) {
         <div className="container">
             <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
-                {["username", "lastName", "firstName", "middleName", "email"].map(name => (
-                    <input key={name} name={name} placeholder={name.replace(/([A-Z])/g, " $1")} value={form[name]} onChange={handleChange} required={name !== "middleName"} />
-                ))}
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="role-label">Role</InputLabel>
-                    <Select
-                        labelId="role-label"
-                        name="role"
-                        value={form.role}
-                        label="Role"
-                        onChange={handleChange}
-                        required
-                    >
-                        <MenuItem value="patient">Patient</MenuItem>
-                        <MenuItem value="admin">Admin</MenuItem>
-                    </Select>
-                </FormControl>
-                {["password", "confirmPassword"].map((name, i) => (
-                    <div key={name} className="password-wrapper">
-                        <input
-                            name={name}
-                            type={show[i ? "confirm" : "pass"] ? "text" : "password"}
-                            placeholder={name.replace(/([A-Z])/g, " $1")}
-                            value={form[name]}
-                            onChange={handleChange}
-                            required
-                        />
-                        <IconButton onClick={() => setShow(s => ({ ...s, [i ? "confirm" : "pass"]: !s[i ? "confirm" : "pass"] }))} tabIndex={-1}>
-                            {show[i ? "confirm" : "pass"] ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                    </div>
-                ))}
+                <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
+                <input name="lastname" placeholder="Last Name" value={form.lastname} onChange={handleChange} required />
+                <input name="firstname" placeholder="First Name" value={form.firstname} onChange={handleChange} required />
+                <input name="middlename" placeholder="Middle Name" value={form.middlename} onChange={handleChange} />
+                <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+                <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+                <input name="confirmPassword" type="password" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
+                <select name="role" value={form.role} onChange={handleChange}>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                </select>
                 <button type="submit">Sign Up</button>
-                {msg.error && <p className="error">{msg.error}</p>}
-                {msg.success && <p style={{ color: "green", textAlign: "center" }}>{msg.success}</p>}
+                {msg.error && <div className="error">{msg.error}</div>}
+                {msg.success && <div className="success">{msg.success}</div>}
             </form>
-            <p className="link" role="button" tabIndex={0} onClick={onSwitchToLogin} onKeyDown={e => e.key === "Enter" && onSwitchToLogin()}>
+            <p className="link" role="button" tabIndex={0} onClick={() => navigate("/login")}>
                 Already have an account? Login
             </p>
         </div>

@@ -17,9 +17,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/users', userRoutes);
+// User-related routes (register, login, profile, patients list)
+app.use('/api', userRoutes);
+
+// Other modules
 app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/appointments', appointmentRoutes); // <-- This line is required
+app.use('/api/appointments', appointmentRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/medical-records', medicalRecordRoutes);

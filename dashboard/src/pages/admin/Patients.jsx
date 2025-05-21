@@ -1,24 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import './Patients.css';
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import "./Patients.css";
 
-const Patients = () => {
+export default function Patients() {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const res = await fetch('http://localhost:5000/api/patients');
-                const data = await res.json();
-                setPatients(data || []);
-            } catch (err) {
-                // handle error
-            } finally {
+        fetch("http://localhost:5000/api/patients")
+            .then(res => res.json())
+            .then(data => {
+                setPatients(data);
                 setLoading(false);
-            }
-        };
-        fetchPatients();
+            })
+            .catch(() => setLoading(false));
     }, []);
 
     if (loading) return <div>Loading...</div>;
@@ -26,28 +20,28 @@ const Patients = () => {
     return (
         <div className="admin-patients">
             <h1>Patients</h1>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Contact</TableCell>
-                        <TableCell>Age</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {patients.map(({ _id, firstname, lastname, email, contact, age }) => (
-                        <TableRow key={_id}>
-                            <TableCell>{firstname} {lastname}</TableCell>
-                            <TableCell>{email}</TableCell>
-                            <TableCell>{contact || '-'}</TableCell>
-                            <TableCell>{age || '-'}</TableCell>
-                        </TableRow>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {patients.map((p, i) => (
+                        <tr key={i}>
+                            <td>{p.username}</td>
+                            <td>{p.lastname}</td>
+                            <td>{p.firstname}</td>
+                            <td>{p.middlename}</td>
+                            <td>{p.email}</td>
+                        </tr>
                     ))}
-                </TableBody>
-            </Table>
+                </tbody>
+            </table>
         </div>
     );
-};
-
-export default Patients;
+}

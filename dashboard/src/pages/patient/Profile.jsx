@@ -1,129 +1,102 @@
-import React, { useState } from 'react';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import "./Profile.css";
+
+const defaultProfile = {
+    username: "",
+    lastname: "",
+    firstname: "",
+    middlename: "",
+    email: "",
+};
 
 const Profile = () => {
-    const [form, setForm] = useState({
-        username: 'johndoe123',
-        lastname: 'Doe',
-        firstname: 'John',
-        middlename: 'Michael',
-        email: 'john@example.com',
-        phone: '09123456789',
-    });
+    const [form, setForm] = useState(defaultProfile);
+    const [msg, setMsg] = useState({ error: "", success: "" });
+    const [isEditing, setIsEditing] = useState(false);
 
-    const [editMode, setEditMode] = useState(false);
-    const [open, setOpen] = useState(false);
+    useEffect(() => {
+        const storedProfile = localStorage.getItem("userProfile");
+        if (storedProfile) {
+            // Merge with defaultProfile to avoid missing fields
+            const { role, ...profile } = JSON.parse(storedProfile);
+            setForm({ ...defaultProfile, ...profile });
+        }
+    }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleEditClick = () => {
-        setEditMode(true);
+    const handleEdit = () => {
+        setIsEditing(true);
+        setMsg({ error: "", success: "" });
     };
 
-    const handleSubmit = (e) => {
+    const handleCancel = () => {
+        const storedProfile = localStorage.getItem("userProfile");
+        if (storedProfile) {
+            const { role, ...profile } = JSON.parse(storedProfile);
+            setForm({ ...defaultProfile, ...profile });
+        }
+        setIsEditing(false);
+        setMsg({ error: "", success: "" });
+    };
+
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        setOpen(true);
-    };
+        setMsg({ error: "", success: "" });
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+        try {
+            // Replace with your actual API endpoint
+            const res = await fetch("/api/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Update failed");
 
-    const handleConfirmUpdate = () => {
-        // Call API to update profile here
-        setOpen(false);
-        setEditMode(false);
-        alert('Profile updated!');
+            // Update localStorage (keep role if present)
+            const storedProfile = localStorage.getItem("userProfile");
+            let updatedProfile = { ...form };
+            if (storedProfile) {
+                const { role } = JSON.parse(storedProfile);
+                if (role) updatedProfile.role = role;
+            }
+            localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
+            setMsg({ error: "", success: "Profile updated!" });
+            setIsEditing(false);
+        } catch (err) {
+            setMsg({ error: err.message, success: "" });
+        }
     };
 
     return (
         <div className="patient-profile">
-            <h1>My Profile</h1>
+            <form className="profile-form" onSubmit={handleUpdate}>
+                <h2>Edit Profile</h2>
+                <input name="username" placeholder="Username" value={form.username} disabled />
+                <input name="lastname" placeholder="Last Name" value={form.lastname} onChange={handleChange} disabled={!isEditing} required />
+                <input name="firstname" placeholder="First Name" value={form.firstname} onChange={handleChange} disabled={!isEditing} required />
+                <input name="middlename" placeholder="Middle Name" value={form.middlename} onChange={handleChange} disabled={!isEditing} />
+                <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} disabled={!isEditing} required />
 
-            {!editMode ? (
-                <div className="profile-view">
-                    <p><strong>Username:</strong> {form.username}</p>
-                    <p><strong>Last Name:</strong> {form.lastname}</p>
-                    <p><strong>First Name:</strong> {form.firstname}</p>
-                    <p><strong>Middle Name:</strong> {form.middlename}</p>
-                    <p><strong>Email:</strong> {form.email}</p>
-                    <p><strong>Phone Number:</strong> {form.phone}</p>
-                    <Button variant="contained" onClick={handleEditClick} sx={{ mt: 2 }}>
-                        Edit Profile
-                    </Button>
-                </div>
-            ) : (
-                <form onSubmit={handleSubmit} className="profile-form">
-                    <TextField
-                        label="Username"
-                        name="username"
-                        value={form.username}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Last Name"
-                        name="lastname"
-                        value={form.lastname}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="First Name"
-                        name="firstname"
-                        value={form.firstname}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Middle Name"
-                        name="middlename"
-                        value={form.middlename}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                        type="email"
-                    />
-                    <TextField
-                        label="Phone Number"
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <Button variant="contained" type="submit" sx={{ mt: 2 }}>
-                        Save Changes
-                    </Button>
-                </form>
-            )}
+                {!isEditing ? (
+                    <button type="button" onClick={handleEdit}>
+                        Edit
+                    </button>
+                ) : (
+                    <div style={{ display: "flex", gap: "8px" }}>
+                        <button type="submit">Update</button>
+                        <button type="button" onClick={handleCancel} style={{ background: "#ccc", color: "#333" }}>
+                            Cancel
+                        </button>
+                    </div>
+                )}
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Confirm Update</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to update your profile information?
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={handleConfirmUpdate}>
-                        Yes, Update
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                {msg.error && <div style={{ color: "red" }}>{msg.error}</div>}
+                {msg.success && <div style={{ color: "green" }}>{msg.success}</div>}
+            </form>
         </div>
     );
 };

@@ -1,76 +1,67 @@
 import React, { useState } from "react";
 import "../../styles/login.css";
 import { useNavigate } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login({ onLoginSuccess }) {
     const [form, setForm] = useState({ email: "", password: "" });
-    const [showPassword, setShowPassword] = useState(false);
-    const [msg, setMsg] = useState("");
+    const [msg, setMsg] = useState({ error: "", success: "" });
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        setMsg("");
+        setMsg({ error: "", success: "" });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMsg({ error: "", success: "" });
+
         try {
-            const res = await fetch("http://localhost:5000/api/users/login", {
+            const res = await fetch("http://localhost:5000/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form)
+                body: JSON.stringify(form),
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "Login failed");
-            // Save user info if needed
-            // localStorage.setItem("user", JSON.stringify(data));
-            onLoginSuccess(data.role);
+
+            // Fetch user profile after login using username from login response
+            const profileRes = await fetch(`http://localhost:5000/api/profile?username=${data.username}`);
+            const profileData = await profileRes.json();
+            if (!profileRes.ok) throw new Error(profileData.message || "Profile fetch failed");
+
+            // Save profile to localStorage with correct keys
+            localStorage.setItem("userProfile", JSON.stringify(profileData));
+
+            // Set userType in App.jsx (if you use this for layout switching)
+            if (onLoginSuccess) onLoginSuccess(profileData.role);
+
+            setMsg({ error: "", success: "Login successful! Redirecting..." });
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (profileData.role === "admin") {
+                    navigate("/admin/dashboard");
+                } else {
+                    navigate("/patient/dashboard");
+                }
+            }, 1000);
         } catch (err) {
-            setMsg(err.message);
+            setMsg({ error: err.message, success: "" });
         }
     };
 
     return (
         <div className="container">
-            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <input
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    value={form.email}
-                    required
-                />
-                <div className="password-wrapper">
-                    <input
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        onChange={handleChange}
-                        value={form.password}
-                        required
-                    />
-                    <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        tabIndex={-1}
-                        className="eye-icon"
-                    >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                </div>
+                <h2>Login</h2>
+                <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+                <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
                 <button type="submit">Login</button>
-                {msg && <p className="error">{msg}</p>}
+                {msg.error && <div className="error">{msg.error}</div>}
+                {msg.success && <div className="success">{msg.success}</div>}
             </form>
-            <p
-                className="link"
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate("/signup")}
-                onKeyDown={(e) => e.key === "Enter" && navigate("/signup")}
-            >
+            <p className="link" role="button" tabIndex={0} onClick={() => navigate("/signup")}>
                 Don't have an account? Sign Up
             </p>
         </div>
