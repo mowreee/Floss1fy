@@ -1,14 +1,28 @@
-// src/pages/admin/Records.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Records.css';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-const dummyRecords = [
-    { id: 1, patient: 'John Doe', treatment: 'Cleaning', date: '2025-05-01' },
-    { id: 2, patient: 'Jane Smith', treatment: 'Filling', date: '2025-05-05' },
-];
-
 const Records = () => {
+    const [records, setRecords] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchRecords = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/medical-records');
+                const data = await res.json();
+                setRecords(data || []);
+            } catch (err) {
+                // handle error
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRecords();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <div className="admin-records">
             <h1>Dental Records</h1>
@@ -17,14 +31,16 @@ const Records = () => {
                     <TableRow>
                         <TableCell>Patient</TableCell>
                         <TableCell>Treatment</TableCell>
+                        <TableCell>Dentist</TableCell>
                         <TableCell>Date</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dummyRecords.map(({ id, patient, treatment, date }) => (
-                        <TableRow key={id}>
+                    {records.map(({ _id, patient, treatment, dentist, date }) => (
+                        <TableRow key={_id}>
                             <TableCell>{patient}</TableCell>
                             <TableCell>{treatment}</TableCell>
+                            <TableCell>{dentist}</TableCell>
                             <TableCell>{date}</TableCell>
                         </TableRow>
                     ))}

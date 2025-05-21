@@ -1,41 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardCards from '../../components/Dashboard/DashboardCards';
 import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/Event';
 import PaymentIcon from '@mui/icons-material/Payments';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { dummyPatients } from './Patients';
-import { dummyAppointments } from './Appointments';
-import { dummyTransactions } from './Transactions';
 import './Dashboard.css';
 
-const COLORS = ['#0088FE', '#00C49F', '#FF8042', '#AA46BE'];
+// Map status to color
+const STATUS_COLORS = {
+    Confirmed: '#4caf50', // green
+    Cancelled: '#f44336', // red
+    Pending: '#ff9800',   // orange
+    // fallback for any other status
+    default: '#0088FE'
+};
 
 const Dashboard = () => {
+    const [appointments, setAppointments] = useState([]);
+    const [patients, setPatients] = useState([]);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        try {
+            const [appointmentsRes, patientsRes, transactionsRes] = await Promise.all([
+                fetch('http://localhost:5000/api/appointments'),
+                fetch('http://localhost:5000/api/patients'),
+                fetch('http://localhost:5000/api/transactions')
+            ]);
+            setAppointments(await appointmentsRes.json());
+            setPatients(await patientsRes.json());
+            setTransactions(await transactionsRes.json());
+        } catch (err) {
+            // handle error
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
     // Compute appointment status counts for pie chart
-    const statusCounts = dummyAppointments.reduce((acc, { status }) => {
+    const statusCounts = appointments.reduce((acc, { status }) => {
         acc[status] = (acc[status] || 0) + 1;
         return acc;
     }, {});
 
     const data = Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
 
-    const totalPayments = dummyTransactions
+    const totalPayments = transactions
         .filter(t => t.status === 'Paid')
         .reduce((sum, t) => sum + t.amount, 0);
 
     // Get recent patients (latest 3)
-    const recentPatients = dummyPatients.slice(-3).reverse();
+    const recentPatients = patients.slice(-3).reverse();
 
     // Recent transactions (latest 3)
-    const recentTransactions = dummyTransactions.slice(-3).reverse();
+    const recentTransactions = transactions.slice(-3).reverse();
 
     return (
         <div className="admin-dashboard">
             <h1>Admin Dashboard</h1>
             <div className="cards-container">
-                <DashboardCards title="Total Patients" value={dummyPatients.length} icon={<PeopleIcon color="primary" />} />
-                <DashboardCards title="Appointments Today" value={dummyAppointments.length} icon={<EventIcon color="primary" />} />
+                <DashboardCards title="Total Patients" value={patients.length} icon={<PeopleIcon color="primary" />} />
+                <DashboardCards title="Appointments Today" value={appointments.length} icon={<EventIcon color="primary" />} />
                 <DashboardCards title="Payments Received" value={`₱${totalPayments.toLocaleString()}`} icon={<PaymentIcon color="primary" />} />
             </div>
 
@@ -53,8 +85,11 @@ const Dashboard = () => {
                             fill="#8884d8"
                             dataKey="value"
                         >
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            {data.map((entry) => (
+                                <Cell
+                                    key={`cell-${entry.name}`}
+                                    fill={STATUS_COLORS[entry.name] || STATUS_COLORS.default}
+                                />
                             ))}
                         </Pie>
                         <Tooltip />
@@ -66,8 +101,8 @@ const Dashboard = () => {
                     <div className="recent-transactions">
                         <h2>Recent Transactions</h2>
                         <ul>
-                            {recentTransactions.map(({ id, patient, amount, date }) => (
-                                <li key={id}>
+                            {recentTransactions.map(({ _id, patient, amount, date }) => (
+                                <li key={_id}>
                                     {patient} - ₱{amount.toLocaleString()} <br />
                                     <small>{date}</small>
                                 </li>
@@ -78,9 +113,9 @@ const Dashboard = () => {
                     <div className="recent-patients">
                         <h2>Recent Patients</h2>
                         <ul>
-                            {recentPatients.map(({ id, name }) => (
-                                <li key={id}>
-                                    {name}
+                            {recentPatients.map(({ _id, firstname, lastname }) => (
+                                <li key={_id}>
+                                    {firstname} {lastname}
                                 </li>
                             ))}
                         </ul>

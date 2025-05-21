@@ -1,14 +1,28 @@
-// src/pages/patient/Transactions.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Transactions.css';
 import { Table, TableHead, TableRow, TableCell, TableBody, Chip } from '@mui/material';
 
-export const transactionsData = [
-    { id: 1, amount: 1200, date: '2025-05-10' },
-    { id: 2, amount: 850, date: '2025-04-25' },
-];
-
 const Transactions = () => {
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/transactions');
+                const data = await res.json();
+                setTransactions(data || []);
+            } catch (err) {
+                // handle error
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTransactions();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <div className="patient-transactions">
             <h1>My Transactions</h1>
@@ -21,8 +35,8 @@ const Transactions = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {transactionsData.map(({ id, amount, date, status }) => (
-                        <TableRow key={id}>
+                    {transactions.map(({ _id, amount, date, status }) => (
+                        <TableRow key={_id}>
                             <TableCell>{amount}</TableCell>
                             <TableCell>{date}</TableCell>
                             <TableCell>

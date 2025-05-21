@@ -1,22 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardCards from '../../components/Dashboard/DashboardCards';
-import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/EventAvailable';
+import PeopleIcon from '@mui/icons-material/People';
 import PaymentIcon from '@mui/icons-material/Payments';
 import './Dashboard.css';
 
-const Dashboard = () => {
-    const [showWelcome, setShowWelcome] = useState(true);
+const PatientDashboard = () => {
+    const [appointments, setAppointments] = useState([]);
+    const [medicalRecords, setMedicalRecords] = useState([]);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => setShowWelcome(false), 3500);
-        return () => clearTimeout(timer);
+        const fetchDashboard = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/dashboard');
+                const data = await res.json();
+                setAppointments(data.appointments || []);
+                setMedicalRecords(data.medicalRecords || []);
+                setTransactions(data.transactions || []);
+            } catch (err) {
+                // handle error
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDashboard();
     }, []);
 
+    if (loading) return <div>Loading...</div>;
+
     const today = new Date().toISOString().split('T')[0];
-    const upcomingCount = appointmentsData.filter(app => app.date >= today).length;
-    const medicalRecordsCount = medicalRecordsData.length;
-    const totalTransactions = transactionsData.reduce((acc, curr) => acc + curr.amount, 0);
+    const upcomingCount = appointments.filter(app => app.date >= today).length;
+    const medicalRecordsCount = medicalRecords.length;
+    const totalTransactions = transactions.reduce((acc, curr) => acc + (curr.amount || 0), 0);
 
     return (
         <div className="patient-dashboard">
@@ -31,8 +48,8 @@ const Dashboard = () => {
                 <div className="recent-appointments">
                     <h2>Recent Appointments</h2>
                     <ul>
-                        {appointmentsData.map(({ id, dentist, date, time, status }) => (
-                            <li key={id}>
+                        {appointments.map(({ _id, dentist, date, time, status }) => (
+                            <li key={_id}>
                                 {date} at {time} with {dentist} - <strong>{status}</strong>
                             </li>
                         ))}
@@ -42,9 +59,9 @@ const Dashboard = () => {
                 <div className="recent-medical-records">
                     <h2>Recent Medical Records</h2>
                     <ul>
-                        {medicalRecordsData.map(({ id, type, date }) => (
-                            <li key={id}>
-                                {type} — {date}
+                        {medicalRecords.map(({ _id, treatment, dentist, date }) => (
+                            <li key={_id}>
+                                {treatment} by {dentist} — {date}
                             </li>
                         ))}
                     </ul>
@@ -53,9 +70,9 @@ const Dashboard = () => {
                 <div className="recent-transactions">
                     <h2>Recent Transactions</h2>
                     <ul>
-                        {transactionsData.map(({ id, amount, date }) => (
-                            <li key={id}>
-                                ₱{amount.toLocaleString()} — {date}
+                        {transactions.map(({ _id, amount, date }) => (
+                            <li key={_id}>
+                                ₱{amount?.toLocaleString()} — {date}
                             </li>
                         ))}
                     </ul>
@@ -65,4 +82,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default PatientDashboard;

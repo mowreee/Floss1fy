@@ -10,6 +10,7 @@ import Appointments from './pages/admin/Appointments';
 import Patients from './pages/admin/Patients';
 import Records from './pages/admin/Records';
 import Transactions from './pages/admin/Transactions';
+import './styles/adminstyles/theme.css';
 
 // Patient pages
 import PatientDashboard from './pages/patient/Dashboard';

@@ -1,31 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Appointments.css';
 import { Table, TableHead, TableRow, TableCell, TableBody, Button } from '@mui/material';
-import { appointmentsData } from '../patient/PatientAppointments';
-
-export const dummyAppointments = [
-    { id: 1, patient: 'John Doe', date: '2025-05-20', time: '10:00 AM', status: 'Confirmed' },
-    { id: 2, patient: 'Jane Smith', date: '2025-05-21', time: '1:00 PM', status: 'Pending' },
-];
-
-const mappedPatientAppointments = appointmentsData.map(({ id, dentist, date, time, status }) => ({
-    id: id + 1000,
-    patient: dentist,
-    date,
-    time,
-    status,
-}));
-
-const allAppointments = [...dummyAppointments, ...mappedPatientAppointments];
 
 const Appointments = () => {
+    const [appointments, setAppointments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchAppointments = async () => {
+        try {
+            const res = await fetch('http://localhost:5000/api/appointments');
+            const data = await res.json();
+            setAppointments(data || []);
+        } catch (err) {
+            // handle error
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAppointments();
+    }, []);
+
+    const updateStatus = async (id, status) => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/appointments/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            if (res.ok) {
+                await fetchAppointments(); // Refresh list for dashboard sync
+            } else {
+                const errData = await res.json();
+                alert(errData.message || 'Failed to update status');
+            }
+        } catch (err) {
+            alert('Error updating status');
+        }
+    };
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <div className="admin-appointments">
             <h1>Appointments</h1>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Patient / Dentist</TableCell>
+                        <TableCell>Dentist</TableCell>
                         <TableCell>Date</TableCell>
                         <TableCell>Time</TableCell>
                         <TableCell>Status</TableCell>
@@ -33,17 +56,30 @@ const Appointments = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {allAppointments.map(({ id, patient, date, time, status }) => (
-                        <TableRow key={id}>
-                            <TableCell>{patient}</TableCell>
+                    {appointments.map(({ _id, dentist, date, time, status }) => (
+                        <TableRow key={_id}>
+                            <TableCell>{dentist}</TableCell>
                             <TableCell>{date}</TableCell>
                             <TableCell>{time}</TableCell>
                             <TableCell>{status}</TableCell>
                             <TableCell>
-                                <Button variant="contained" size="small" color="primary" sx={{ mr: 1 }}>
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    color="primary"
+                                    sx={{ mr: 1 }}
+                                    onClick={() => updateStatus(_id, 'Confirmed')}
+                                    disabled={status === 'Confirmed'}
+                                >
                                     Confirm
                                 </Button>
-                                <Button variant="outlined" size="small" color="error">
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    color="error"
+                                    onClick={() => updateStatus(_id, 'Cancelled')}
+                                    disabled={status === 'Cancelled'}
+                                >
                                     Cancel
                                 </Button>
                             </TableCell>

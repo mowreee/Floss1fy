@@ -7,21 +7,30 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 export default function Login({ onLoginSuccess }) {
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
+    const [msg, setMsg] = useState("");
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        setMsg("");
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Simulate role detection
-        const isAdmin = form.email === "admin@example.com";
-        const role = isAdmin ? "admin" : "patient";
-
-        // Call parent to set user type
-        onLoginSuccess(role);
+        try {
+            const res = await fetch("http://localhost:5000/api/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Login failed");
+            // Save user info if needed
+            // localStorage.setItem("user", JSON.stringify(data));
+            onLoginSuccess(data.role);
+        } catch (err) {
+            setMsg(err.message);
+        }
     };
 
     return (
@@ -53,6 +62,7 @@ export default function Login({ onLoginSuccess }) {
                     </IconButton>
                 </div>
                 <button type="submit">Login</button>
+                {msg && <p className="error">{msg}</p>}
             </form>
             <p
                 className="link"

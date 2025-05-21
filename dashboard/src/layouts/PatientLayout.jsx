@@ -16,7 +16,7 @@ const PatientLayout = ({ children }) => {
             {sidebarOpen && <PatientSidebar />}
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                 <Navbar onSidebarToggle={handleSidebarToggle} userType="patient" />
-                <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#e8f5e9', overflowY: 'auto' }}>
+                <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#f4f8fb', overflowY: 'auto' }}>
                     {children}
                 </Box>
             </Box>
