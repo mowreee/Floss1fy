@@ -5,14 +5,19 @@ import {
 import { Menu as MenuIcon, AccountCircle, Home as HomeIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Navbar = ({ onSidebarToggle, userType }) => {
+const Navbar = ({ onSidebarToggle, userType, onLogout }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Get username from localStorage
+    const profile = JSON.parse(localStorage.getItem("userProfile"));
+    const displayName = profile?.username || profile?.email || "User";
+
     const handleLogout = () => {
-        localStorage.removeItem('user');
+        localStorage.removeItem('userProfile');
         sessionStorage.clear();
-        navigate('/login');
+        if (onLogout) onLogout();
+        navigate('/login', { replace: true }); // Always go directly to login
     };
 
     const breadcrumbs = () => {
@@ -46,7 +51,7 @@ const Navbar = ({ onSidebarToggle, userType }) => {
                     {(userType === 'patient' || userType === 'admin') && breadcrumbs()}
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="body1">John Doe</Typography>
+                    <Typography variant="body1">{displayName}</Typography>
                     <IconButton color="inherit"><AccountCircle /></IconButton>
                     <Tooltip title="Logout">
                         <IconButton color="inherit" onClick={handleLogout}><LogoutIcon /></IconButton>
@@ -57,4 +62,4 @@ const Navbar = ({ onSidebarToggle, userType }) => {
     );
 };
 
-export default Navbar;
+export default Navbar; add
