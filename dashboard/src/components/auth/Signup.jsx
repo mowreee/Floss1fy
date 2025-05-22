@@ -47,7 +47,7 @@ export default function Signup() {
         }
 
         try {
-            const res = await fetch("/api/auth/signup", {
+            const res = await fetch("http://localhost:5000/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
@@ -124,7 +124,7 @@ export default function Signup() {
 
                 <select name="role" value={form.role} onChange={handleChange} required>
                     <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
+                    <option value="admin">Admin</option>
                 </select>
 
                 <button type="submit">Sign Up</button>
