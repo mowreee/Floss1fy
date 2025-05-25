@@ -48,7 +48,7 @@ const Profile = () => {
 
         try {
             // Replace with your actual API endpoint
-            const res = await fetch("/api/profile", {
+            const res = await fetch("http://localhost:5000/api/profile", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
